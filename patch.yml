@@ -1,7 +1,7 @@
 ---
 - name: Update and Reboot Servers
-  hosts: nv
-  become: yes  
+  hosts: ws
+  become: true
   tasks:
     - name: Update YUM (Red Hat/CentOS)
       yum:
@@ -11,7 +11,7 @@
     
     - name: Update APT (Debian/Ubuntu)
       apt:
-        update_cache: yes
+        update_cache: true
         upgrade: dist
       when: ansible_os_family == 'Debian'
 
@@ -19,8 +19,7 @@
       reboot:
       async: 1
       poll: 0
-#       msg: "The server is going down for reboot"
-      ignore_errors: yes
+      ignore_errors: true
     
     - name: Wait for server to come back up
       wait_for:
@@ -28,5 +27,5 @@
         port: 22  
         state: started
         timeout: 300  
-      become: no
+      become: false
       delegate_to: localhost
